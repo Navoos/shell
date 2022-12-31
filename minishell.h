@@ -6,7 +6,7 @@
 /*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:50:52 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/12/29 12:36:34 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2022/12/30 11:02:59 by yakhoudr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,16 @@ typedef struct s_tree
 	int	type;	
 }	t_tree;
 
+typedef struct s_cmd
+{
+	char	*val;
+	struct s_cmd	*next;
+}	t_cmd;
+
 typedef struct s_exec_node
 {
 	int		type;
-	char	*cmd;
+	t_cmd	*cmd;
 }	t_exec_node;
 
 typedef struct s_pipe_node

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   __exec_norm.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: machlouj <machlouj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 17:07:16 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/14 11:53:07 by machlouj         ###   ########.fr       */
+/*   Updated: 2022/12/30 11:52:00 by yakhoudr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ void	__error_norm(char *cmd)
 	exit(127);
 }
 
-int	__error__(char **__s, t_env_list *__env)
-{
-	int	i;
+// int	__error__(char **__s, t_env_list *__env)
+// {
+// 	int	i;
 
-	i = 0;
-	if (__accept__(__s))
-		return (__exec__v1(__s, __env));
-	else
-		return (__exec__v2(__s, __env));
-	return (0);
-}
+// 	i = 0;
+// 	if (__accept__(__s))
+// 		return (__exec__v1(__s, __env));
+// 	else
+// 		return (__exec__v2(__s, __env));
+// 	return (0);
+// }

@@ -6,7 +6,7 @@
 /*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 21:29:13 by machlouj          #+#    #+#             */
-/*   Updated: 2022/10/09 21:55:31 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2022/12/30 15:12:24 by yakhoudr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ t_tree	*ft_construct_enode(void)
 
 	enode = ft_xalloc(sizeof(t_exec_node));
 	enode->type = ENODE;
-	enode->cmd = ft_strdup("");
-	ft_collect_tmp_mem(enode->cmd);
+	enode->cmd = NULL;
 	ft_collect_tmp_mem(enode);
 	return ((t_tree *) enode);
 }
@@ -36,21 +35,51 @@ t_tree	*ft_construct_pnode(t_tree *left, t_tree *right)
 	return ((t_tree *) pnode);
 }
 
+void	join_args(t_cmd **head, t_cmd *new)
+{
+	t_cmd	*tmp;
+
+	if (!head)
+		return ;
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	tmp = *head;
+	while (tmp->next)
+	{
+		tmp = tmp->next;
+	}
+	tmp->next = new;
+}
+
+t_cmd	*create_arg(char *value)
+{
+	t_cmd	*ans;
+
+	ans = ft_xalloc(sizeof(t_cmd));
+	ft_add_to_tmp_memory(&g_minishell.tmp_memory, ft_create_memory_node(ans));
+	if (!ans)
+		exit(1);
+	ans->val = ft_strdup(value);
+	ft_add_to_tmp_memory(&g_minishell.tmp_memory, ft_create_memory_node(ans->val));
+	ans->next = NULL;
+	return (ans);
+}
+
 t_tree	*ft_parse_exec(t_parser *parser)
 {
 	t_tree		*tmp;
+	int			i;
 
 	parser->tree = ft_construct_enode();
 	tmp = parser->tree;
+	i = 0;
 	parser->tree = ft_parse_redir(parser);
 	while (parser->current && parser->current->type == WORD_T)
 	{
-		((t_exec_node *) tmp)->cmd = ft_strjoin(((t_exec_node *) tmp)->cmd,
-				parser->current->value);
-		ft_collect_tmp_mem(((t_exec_node *) tmp)->cmd);
-		((t_exec_node *) tmp)->cmd
-			= ft_strjoin(((t_exec_node *) tmp)->cmd, " ");
-		ft_collect_tmp_mem(((t_exec_node *) tmp)->cmd);
+		join_args(&((t_exec_node *)parser->tree)->cmd, create_arg(parser->current->value));
 		parser->current = parser->current->next;
 	}
 	parser->tree = ft_parse_redir(parser);

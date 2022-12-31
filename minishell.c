@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: machlouj <machlouj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:51:08 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/12 22:55:46 by machlouj         ###   ########.fr       */
+/*   Updated: 2022/12/30 21:10:13 by yakhoudr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ void	ft_run_shell(char **envp)
 		}
 		parser.current = parser.tokens;
 		parser.tree = ft_parse_cmd(&parser);
+		while (((t_exec_node *)parser.tree)->cmd)
+		{
+			printf("%s ", ((t_exec_node *)parser.tree)->cmd->val);
+			(((t_exec_node *)parser.tree))->cmd = ((t_exec_node *)parser.tree)->cmd->next;
+		}
+		printf("\n");
 		__print_tree(&parser, io, &parser.tokens);
 	}
 }
@@ -81,13 +87,13 @@ int	main(int ac, char **av, char **envp)
 	return (g_minishell.exit_status);
 }
 
-void	__print_tree(t_parser *parser, int io[2], t_tokens **token)
-{
-	ft_print_tree(parser->tree, &parser->env_list);
-	ft_drop_tmp_memory();
-	if (token)
-		*token = 0x0;
-	g_minishell.error_flag = 0;
-	dup2(io[0], STDIN_FILENO);
-	dup2(io[1], STDOUT_FILENO);
-}
+// void	__print_tree(t_parser *parser, int io[2], t_tokens **token)
+// {
+// 	ft_print_tree(parser->tree, &parser->env_list);
+// 	ft_drop_tmp_memory();
+// 	if (token)
+// 		*token = 0x0;
+// 	g_minishell.error_flag = 0;
+// 	dup2(io[0], STDIN_FILENO);
+// 	dup2(io[1], STDOUT_FILENO);
+// }
