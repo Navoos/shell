@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 23:30:02 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/02 21:08:52 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:45:05 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@ void	ft_go_back(t_shell *shell)
 	if (oldpwd)
 	{
 		if (chdir(oldpwd) == -1)
-			printf("bigshell: cd: %s: No such file or directory\n", oldpwd);
+		{
+			ft_putstr_fd("bigshell: cd: ", 2);
+			ft_putstr_fd(oldpwd, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+		}
 		else
 		{
 			if (ft_key_exist(shell->env_head, "OLDPWD"))
@@ -31,7 +35,9 @@ void	ft_go_back(t_shell *shell)
 		}
 	}
 	else
-		printf("bigshell: cd: OLDPWD not set\n");
+		ft_putstr_fd("bigshell: cd: OLDPWD not set\n", 2);
+	if (tmp_oldpwd)
+		free(tmp_oldpwd);
 }
 
 void	ft_go_home(t_shell *shell)
@@ -44,12 +50,16 @@ void	ft_go_home(t_shell *shell)
 	if (home)
 	{
 		if (chdir(home) == -1)
-			printf("bigshell: cd: %s: No such file or directory\n", home);
+		{
+			ft_putstr_fd("bigshell: cd: ", 2);
+			ft_putstr_fd(home, 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+		}
 		else if (ft_key_exist(shell->env_head, "OLDPWD"))
 			ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
 	}
 	else
-		printf("bigshell: cd: HOME not set\n");
+		ft_putstr_fd("bigshell: cd: HOME not set\n", 2);
 }
 
 void	ft_go_point(t_shell *shell)

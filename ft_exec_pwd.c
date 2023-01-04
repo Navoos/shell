@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 23:21:37 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/02 20:41:28 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:21:31 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ void	ft_pwd(void)
 
 	pwd = getcwd(0x0, 0);
 	if (!pwd)
-	{
-		
 		return ;
-	}
-	printf("%s\n", pwd);
+	ft_putstr_fd(pwd, 1);
+	ft_putchar_fd('\n', 1);
 	free(pwd);
 }

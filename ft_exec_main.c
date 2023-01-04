@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 11:54:03 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 17:31:32 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:33:20 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	exec_line(char *line, t_shell *shell)
 			wait(NULL);
 		}
 		else
-			printf("bigshell: No such file or directory\n");
+			ft_putstr_fd("bigshell: No such file or directory\n", 2);
 	}
 }
 

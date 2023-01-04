@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 20:09:29 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/02 20:28:03 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:31:44 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,26 @@ void	ft_exit(char **args)
 {
 	if (args[1] == NULL)
 	{
-		printf("exit\n");
+		ft_putstr_fd("exit\n", 1);
 		exit(g_minishell.exit_status);
 	}
 	else if (!ft_isnumber(args[1]))
 	{
-		printf("exit\n");
-		printf("bigshell: exit: %s: numeric argument required\n", args[1]);
+		ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd("bigshell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
 		exit(255);
 	}
 	else if (args[2] != NULL)
 	{
-		printf("exit\n");
-		printf("bigshell: exit: too many arguments\n");
+		ft_putstr_fd("bigshell: exit: too many arguments\n", 2);
+		ft_putstr_fd("exit\n", 1);
 		g_minishell.exit_status = 1;
 	}
 	else
 	{
-		printf("exit\n");
+		ft_putstr_fd("exit\n", 1);
 		exit(ft_atoi(args[1]));
 	}
 }

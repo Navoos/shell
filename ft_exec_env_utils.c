@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 23:27:22 by mzridi            #+#    #+#             */
-/*   Updated: 2022/12/31 23:31:42 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:29:43 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ void	ft_print_env(t_env *env_head)
 	{
 		if (tmp->value)
 		{
-			printf("%s=%s", tmp->key, tmp->value);
-			printf("\n");
+			ft_putstr_fd(tmp->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(tmp->value, 1);
+			ft_putstr_fd("\n", 1);
 		}
 		tmp = tmp->next;
 	}
@@ -80,13 +82,17 @@ void	ft_print_export(t_env *env_head)
 	{
 		if (tmp->value)
 		{
-			printf("declare -x %s=\"%s\"", tmp->key, tmp->value);
-			printf("\n");
+			ft_putstr_fd("declare -x ", 1);
+			ft_putstr_fd(tmp->key, 1);
+			ft_putstr_fd("=\"", 1);
+			ft_putstr_fd(tmp->value, 1);
+			ft_putstr_fd("\"\n", 1);
 		}
 		else
 		{
-			printf("declare -x %s", tmp->key);
-			printf("\n");
+			ft_putstr_fd("declare -x ", 1);
+			ft_putstr_fd(tmp->key, 1);
+			ft_putstr_fd("\n", 1);
 		}
 		tmp = tmp->next;
 	}

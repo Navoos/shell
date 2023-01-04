@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 15:38:27 by mzridi            #+#    #+#             */
-/*   Updated: 2022/12/30 21:29:17 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 21:36:15 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ int	ft_echo(int argc, char **argv)
 		n = 1;
 	while (i < argc)
 	{
-		printf("%s", argv[i]);
+		ft_putstr_fd(argv[i], 1);
 		if (argv[i + 1])
-			printf(" ");
+			ft_putchar_fd(' ', 1);
 		i++;
 	}
 	if (!n)
-		printf("\n");
+		ft_putchar_fd('\n', 1);
 	return (0);
 }
