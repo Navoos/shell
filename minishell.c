@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: machlouj <machlouj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:51:08 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/12 22:55:46 by machlouj         ###   ########.fr       */
+/*   Updated: 2023/01/03 21:11:17 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	__error_flag(int io[2], t_tokens **token)
 	dup2(io[1], STDOUT_FILENO);
 }
 
-void	ft_run_shell(char **envp)
+void	ft_run_shell(char **envp, t_shell *shell)
 {
 	char				*cmd;
 	t_parser			parser;
@@ -52,7 +52,7 @@ void	ft_run_shell(char **envp)
 	while (1)
 	{
 		__signal__main();
-		cmd = readline("0usec$ ");
+		cmd = readline("bigshell$ ");
 		if (!cmd)
 			break ;
 		__history_main(cmd);
@@ -64,26 +64,33 @@ void	ft_run_shell(char **envp)
 		}
 		parser.current = parser.tokens;
 		parser.tree = ft_parse_cmd(&parser);
-		__print_tree(&parser, io, &parser.tokens);
+		__print_tree(&parser, io, &parser.tokens, shell);
 	}
 }
 
 int	main(int ac, char **av, char **envp)
 {
+	t_env	*env;
+	t_shell	*shell;
+
 	(void)av;
+	shell = malloc(sizeof(t_shell));
+	env = NULL;
+	ft_init_shell(shell, env, envp);
 	if (ac != 1)
 	{
 		ft_putstr_fd("ERROR : Can't run Minishell with arguments",
 			STDERR_FILENO);
 		return (69);
 	}
-	ft_run_shell(envp);
+	ft_run_shell(envp, shell);
 	return (g_minishell.exit_status);
 }
 
-void	__print_tree(t_parser *parser, int io[2], t_tokens **token)
+void	__print_tree(t_parser *parser, int io[2], t_tokens **token, t_shell *shell)
 {
-	ft_print_tree(parser->tree, &parser->env_list);
+	// ft_print_tree(parser->tree, &parser->env_list);
+	ft_exec_main(parser->tree, shell);
 	ft_drop_tmp_memory();
 	if (token)
 		*token = 0x0;

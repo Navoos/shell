@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:50:52 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/12/29 12:36:34 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/03 23:50:47 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,44 @@ typedef struct s_redir_node
 	t_tree		*sub;
 }	t_redir_node;
 
+typedef struct s_path
+{
+	int		stat;
+	char	*path;
+}				t_path;
+
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}				t_env;
+
+typedef struct s_shell
+{
+	t_env	*env_head;
+	int		exit_status;
+}				t_shell;
+
+unsigned int	ft_wcount(char *s, char c);
+int				ft_echo(int argc, char **argv);
+void			ft_init_env(t_env **env_head, char **envp);
+void			ft_init_shell(t_shell *shell, t_env *env_head, char **envp);
+void			ft_add_env(t_env **env_head, char *key, char *value);
+void			ft_delete_env(t_env **env_head, char *key);
+void			ft_print_env(t_env *env_head);
+char			*ft_get_env(t_env *env_head, char *key);
+char			**ft_env_to_tab(t_env *env_head);
+void			ft_export(t_shell *shell, char **args);
+void			ft_unset(t_shell *shell, char **args);
+void			ft_pwd(void);
+void			ft_cd(t_shell *shell, char **args);
+int				ft_exec_main(t_tree *tree, t_shell *shell);
+void			ft_print_export(t_env *env_head);
+int				ft_key_exist(t_env *env_head, char *key);
+void			ft_exec_pipe(t_pipe_node *pnode, t_shell *shell);
+void			ft_exit(char **args);
+void			ft_exec_redir(t_redir_node *redir_node, t_shell *shell);
 void			ft_init_env_list(t_env_list **env, char **envp);
 void			*ft_create_memory_node(void *ptr);
 void			ft_add_to_perm_memory(t_memory	**memory, t_memory *new);
@@ -212,7 +250,7 @@ t_tree			*ft_construct_pnode(t_tree *left, t_tree *right);
 t_tree			*ft_parse_exec(t_parser *parser);
 t_tree			*ft_construct_herdoc(t_parser	*parser);
 t_tree			*ft_parse_redir(t_parser *parser);
-void			__print_tree(t_parser *parser, int io[2], t_tokens **token);
+void			__print_tree(t_parser *parser, int io[2], t_tokens **token, t_shell *shell);
 int				herdoc(t_parser	*parser);
 void			ft_add_env_entrace(t_env_list **env, t_env_list *env_node);
 t_env_list		*ft_create_env_node(char *key, char *value);
