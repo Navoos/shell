@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:50:52 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/03 23:50:47 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:14:23 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void			ft_print_export(t_env *env_head);
 int				ft_key_exist(t_env *env_head, char *key);
 void			ft_exec_pipe(t_pipe_node *pnode, t_shell *shell);
 void			ft_exit(char **args);
-void			ft_exec_redir(t_redir_node *redir_node, t_shell *shell);
+void			ft_redir(t_redir_node *redir_node, t_shell *shell);
 void			ft_init_env_list(t_env_list **env, char **envp);
 void			*ft_create_memory_node(void *ptr);
 void			ft_add_to_perm_memory(t_memory	**memory, t_memory *new);

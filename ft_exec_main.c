@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 11:54:03 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/03 19:47:30 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/04 17:31:32 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	exec_line(char *line, t_shell *shell)
 
 int	ft_exec_main(t_tree *tree, t_shell *shell)
 {
-	// char		*line;
 	t_exec_node		*cnode;
 	t_pipe_node		*pnode;
 	t_redir_node	*rnode;
@@ -112,18 +111,7 @@ int	ft_exec_main(t_tree *tree, t_shell *shell)
 	else if (tree->type == RNODE)
 	{
 		rnode = (t_redir_node *)tree;
-		ft_exec_redir(rnode, shell);
+		ft_redir(rnode, shell);
 	}
-	// while (1)
-	// {
-	// 	line = readline("minishell> ");
-	// 	if (!line)
-	// 		return (0);
-	// 	if (*line)
-	// 		add_history(line);
-	// 	if (ft_strcmp(line, "exit") == 0)
-	// 		break ;
-	// 	exec_line(line, shell);
-	// }
 	return (0);
 }
