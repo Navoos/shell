@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   merger.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:11:16 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/09 22:09:18 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:25:42 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_merge_quoted_words(t_tokens **head, t_env_list *env_list)
+void	ft_merge_quoted_words(t_tokens **head, t_env *env_list)
 {
 	t_tokens	*tmp;
 	t_tokens	*next;
@@ -40,7 +40,7 @@ void	ft_merge_quoted_words(t_tokens **head, t_env_list *env_list)
 	}
 }
 
-t_tokens	*ft_merge_words(t_tokens *tmp, char **str, t_env_list *env_list)
+t_tokens	*ft_merge_words(t_tokens *tmp, char **str, t_env *env_list)
 {
 	t_tokens	*current;
 	int			merged;
@@ -64,7 +64,7 @@ t_tokens	*ft_merge_words(t_tokens *tmp, char **str, t_env_list *env_list)
 	return (current);
 }
 
-t_tokens	*ft_merge_swords(t_tokens *tmp, char **str, t_env_list *env_list)
+t_tokens	*ft_merge_swords(t_tokens *tmp, char **str, t_env *env_list)
 {
 	t_tokens	*current;
 
@@ -92,7 +92,7 @@ t_tokens	*ft_merge_swords(t_tokens *tmp, char **str, t_env_list *env_list)
 	return (current);
 }
 
-t_tokens	*ft_merge_dwords(t_tokens *tmp, char **str, t_env_list *env_list)
+t_tokens	*ft_merge_dwords(t_tokens *tmp, char **str, t_env *env_list)
 {
 	t_tokens	*current;
 

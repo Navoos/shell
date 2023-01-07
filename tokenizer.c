@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/26 11:55:34 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/09 14:25:26 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:25:08 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_find_char(char c, char *str)
 	return (0);
 }
 
-void	ft_filter_tokens(t_tokens **token, t_env_list *env_list)
+void	ft_filter_tokens(t_tokens **token, t_env *env_list)
 {
 	ft_merge_quoted_words(token, env_list);
 	ft_check_syntax_pipe(*token);
@@ -67,7 +67,7 @@ void	ft_filter_tokens(t_tokens **token, t_env_list *env_list)
 	ft_skip_spaces(token);
 }
 
-void	ft_tokenize_cmd(t_tokens **token, char *str, t_env_list	*env_list)
+void	ft_tokenize_cmd(t_tokens **token, char *str, t_env	*env_list)
 {
 	int	i;
 

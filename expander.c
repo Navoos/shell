@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:08:50 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/09 22:11:23 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:26:14 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_increase_normal_char_for_special_char(char *str, char **res)
 	return (i);
 }
 
-void	__norm_expander(int *i, char *str, char **res, t_env_list *env_list)
+void	__norm_expander(int *i, char *str, char **res, t_env *env_list)
 {
 	*i += 1;
 	if (str[*i] == '?')
@@ -50,7 +50,7 @@ void	__norm_expander(int *i, char *str, char **res, t_env_list *env_list)
 	}
 }
 
-char	*ft_expand(char *str, t_env_list *env_list)
+char	*ft_expand(char *str, t_env *env_list)
 {
 	int		i;
 	char	*res;

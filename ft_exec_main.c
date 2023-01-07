@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 11:54:03 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 21:33:20 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/07 19:09:52 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,18 @@ char	*get_path(t_env *env_head, char *cmd)
 {
 	char	**env_path;
 
-	if (access(cmd, F_OK | X_OK) == 0)
-		return (cmd);
+	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/')
+		|| (cmd[0] == '.' && cmd[1] == '.' && cmd[2] == '/'))
+	{
+		if (access(cmd, F_OK) == 0)
+			return (cmd);
+		return (0);
+	}
 	env_path = ft_split(ft_get_env(env_head, "PATH"), ':');
 	while (*env_path)
 	{
 		if (access(ft_strjoin(*env_path, ft_strjoin("/", cmd)), \
-			F_OK | X_OK) == 0)
+				F_OK) == 0)
 			return (ft_strjoin(*env_path, ft_strjoin("/", cmd)));
 		env_path++;
 	}
@@ -55,7 +60,7 @@ void	exec_built_in(int argc, char **argv, t_shell *shell)
 	else if (is_built_in(argv[0]) == 2)
 		ft_cd(shell, argv);
 	else if (is_built_in(argv[0]) == 3)
-		ft_pwd();
+		ft_pwd(shell);
 	else if (is_built_in(argv[0]) == 4)
 		ft_export(shell, argv);
 	else if (is_built_in(argv[0]) == 5)
@@ -66,30 +71,30 @@ void	exec_built_in(int argc, char **argv, t_shell *shell)
 		ft_exit(argv);
 }
 
-void	exec_line(char *line, t_shell *shell)
+void	exec_line(t_cmd *cmd, t_shell *shell)
 {
-	char	arglc;
-	char	**arglv;
-	char	*cmd;
+	char	*_cmd;
 	char	**envp;
+	char	**arglv;
+	int		arglc;
 
+	arglc = ft_get_argc(cmd);
+	arglv = ft_get_args(cmd);
 	envp = ft_env_to_tab(shell->env_head);
-	arglv = ft_split(line, ' ');
-	arglc = ft_wcount(line, ' ');
-	if (is_built_in(arglv[0]))
+	if (arglv && is_built_in(arglv[0]))
 		exec_built_in(arglc, arglv, shell);
 	else
 	{
-		cmd = arglv[0];
-		if (get_path(shell->env_head, cmd))
-		{
-			if (fork() == 0)
-				execve(get_path(shell->env_head, cmd), arglv, envp);
-			wait(NULL);
-		}
+		_cmd = arglv[0];
+		if (get_path(shell->env_head, _cmd))
+			ft_exec_cmd(shell, _cmd, arglv, envp);
 		else
-			ft_putstr_fd("bigshell: No such file or directory\n", 2);
+		{
+			ft_putstr_fd("bigshell: command not found\n", 2);
+			g_minishell.exit_status = 127;
+		}
 	}
+	free(arglv);
 }
 
 int	ft_exec_main(t_tree *tree, t_shell *shell)
@@ -101,7 +106,8 @@ int	ft_exec_main(t_tree *tree, t_shell *shell)
 	if (tree->type == ENODE)
 	{
 		cnode = (t_exec_node *)tree;
-		exec_line(cnode->cmd, shell);
+		if (cnode->cmd)
+			exec_line(cnode->cmd, shell);
 	}
 	else if (tree->type == PNODE)
 	{

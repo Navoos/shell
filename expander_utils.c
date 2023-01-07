@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:09:50 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/09 22:02:59 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:26:40 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-char	*get_cor_value(char *key, t_env_list *env_list)
+char	*get_cor_value(char *key, t_env *env_list)
 {
 	char	*res;
 
@@ -51,7 +51,7 @@ int	ft_increase_normal_char(char *str, char **res)
 	return (i);
 }
 
-int	ft_get_new_string(char *str, char **res, t_env_list *env_list)
+int	ft_get_new_string(char *str, char **res, t_env *env_list)
 {
 	char	*key;
 	int		j;

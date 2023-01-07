@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:51:08 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/03 21:11:17 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/07 18:26:44 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,24 @@ void	__error_flag(int io[2], t_tokens **token)
 	dup2(io[1], STDOUT_FILENO);
 }
 
-void	ft_run_shell(char **envp, t_shell *shell)
+void	ft_run_shell(t_shell *shell)
 {
 	char				*cmd;
 	t_parser			parser;
 	int					io[2];
 
 	__init__(&parser, io);
-	ft_init_env_list(&parser.env_list, envp);
+	parser.env_list = shell->env_head;
 	parser.tokens = 0x0;
 	while (1)
 	{
-		__signal__main();
+		g_minishell.print_prompt = 1;
+		ft_exec_signals();
 		cmd = readline("bigshell$ ");
+		add_history(cmd);
 		if (!cmd)
 			break ;
-		__history_main(cmd);
-		ft_tokenize_cmd(&parser.tokens, cmd, parser.env_list);
+		ft_tokenize_cmd(&parser.tokens, cmd, shell->env_head);
 		if (g_minishell.error_flag)
 		{
 			__error_flag(io, &parser.tokens);
@@ -83,13 +84,13 @@ int	main(int ac, char **av, char **envp)
 			STDERR_FILENO);
 		return (69);
 	}
-	ft_run_shell(envp, shell);
+	ft_run_shell(shell);
 	return (g_minishell.exit_status);
 }
 
-void	__print_tree(t_parser *parser, int io[2], t_tokens **token, t_shell *shell)
+void	__print_tree(t_parser *parser, int io[2],
+						t_tokens **token, t_shell *shell)
 {
-	// ft_print_tree(parser->tree, &parser->env_list);
 	ft_exec_main(parser->tree, shell);
 	ft_drop_tmp_memory();
 	if (token)

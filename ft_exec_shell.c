@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 20:48:45 by mzridi            #+#    #+#             */
-/*   Updated: 2022/12/31 22:50:55 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/06 18:13:19 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,6 @@ void	ft_init_shell(t_shell *shell, t_env *env_head, char **envp)
 {
 	ft_init_env(&env_head, envp);
 	shell->env_head = env_head;
-	shell->exit_status = 0;
+	shell->cwd = getcwd(NULL, 0);
 	ft_increment_shlvl(shell);
 }

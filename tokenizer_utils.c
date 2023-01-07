@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:12:20 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/10/09 22:08:40 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/06 16:25:54 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_tokens	*ft_create_token(int type, char *value)
 	return (ret);
 }
 
-void	ft_get_word(t_tokens *tmp, t_env_list *env_list, char **str)
+void	ft_get_word(t_tokens *tmp, t_env *env_list, char **str)
 {
 	t_tokens	*prev;
 

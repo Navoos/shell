@@ -6,11 +6,22 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 23:30:02 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 21:45:05 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/06 20:27:41 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_add_pwd(t_shell *shell ,char *val)
+{
+	if (val)
+	{
+		if (shell->cwd)
+			free(shell->cwd);
+		shell->cwd = ft_strdup(val);
+		ft_add_env(&shell->env_head, "PWD", val);
+	}
+}
 
 void	ft_go_back(t_shell *shell)
 {
@@ -31,7 +42,8 @@ void	ft_go_back(t_shell *shell)
 		{
 			if (ft_key_exist(shell->env_head, "OLDPWD"))
 				ft_add_env(&shell->env_head, "OLDPWD", tmp_oldpwd);
-			ft_pwd();
+			ft_add_pwd(shell, getcwd(NULL, 0));
+			ft_pwd(shell);
 		}
 	}
 	else
@@ -56,7 +68,12 @@ void	ft_go_home(t_shell *shell)
 			ft_putstr_fd(": No such file or directory\n", 2);
 		}
 		else if (ft_key_exist(shell->env_head, "OLDPWD"))
+		{
 			ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
+			ft_add_pwd(shell, getcwd(NULL, 0));
+		}
+		else
+			ft_add_pwd(shell, getcwd(NULL, 0));
 	}
 	else
 		ft_putstr_fd("bigshell: cd: HOME not set\n", 2);
@@ -65,11 +82,20 @@ void	ft_go_home(t_shell *shell)
 void	ft_go_point(t_shell *shell)
 {
 	char	*oldpwd;
+	char	*tmp;
 
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
+	{
 		printf("bigshell: cd: error retrieving current directory:\
  getcwd: cannot access parent directories: No such file or directory\n");
+		oldpwd = shell->cwd;
+		tmp = shell->cwd;
+		if (oldpwd)
+			shell->cwd = ft_strjoin(oldpwd, "/.");
+		if (tmp)
+			free(tmp);
+	}
 	else if (ft_key_exist(shell->env_head, "OLDPWD"))
 		ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
 }
@@ -90,6 +116,11 @@ void	ft_cd(t_shell *shell, char **args)
 		if (chdir(args[1]) == -1)
 			printf("bigshell: cd: %s: No such file or directory\n", args[1]);
 		else if (ft_key_exist(shell->env_head, "OLDPWD"))
+		{
 			ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
+			ft_add_pwd(shell, getcwd(NULL, 0));
+		}
+		else
+			ft_add_pwd(shell, getcwd(NULL, 0));
 	}
 }

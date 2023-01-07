@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_analyser.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 11:06:21 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/09/29 11:08:14 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/07 16:48:59 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ void	ft_check_syntax_redir(t_tokens *token)
 			{
 				g_minishell.error_flag = 1;
 				if (token->type != HERDOC_T)
-					ft_putstr_fd("ERROR : Syntax error for redirection",
+					ft_putstr_fd("ERROR : Syntax error for redirection\n",
 						STDERR_FILENO);
 				else
-					ft_putstr_fd("ERROR : Syntax error for herdoc",
+					ft_putstr_fd("ERROR : Syntax error for herdoc\n",
 						STDERR_FILENO);
 				return ;
 			}
@@ -58,7 +58,7 @@ void	ft_check_syntax_pipe(t_tokens *token)
 							|| next->type == SREDIR_OUT_T))))
 			{
 				g_minishell.error_flag = 1;
-				ft_putstr_fd("ERROR : Syntax error for pipe", STDERR_FILENO);
+				ft_putstr_fd("ERROR : Syntax error for pipe\n", STDERR_FILENO);
 				return ;
 			}
 		}
