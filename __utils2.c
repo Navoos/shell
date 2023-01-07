@@ -6,7 +6,7 @@
 /*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 21:29:13 by machlouj          #+#    #+#             */
-/*   Updated: 2022/12/30 15:12:24 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/07 20:38:45 by yakhoudr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_tree	*ft_parse_exec(t_parser *parser)
 	parser->tree = ft_parse_redir(parser);
 	while (parser->current && parser->current->type == WORD_T)
 	{
-		join_args(&((t_exec_node *)parser->tree)->cmd, create_arg(parser->current->value));
+		join_args(&((t_exec_node *)tmp)->cmd, create_arg(parser->current->value));
 		parser->current = parser->current->next;
 	}
 	parser->tree = ft_parse_redir(parser);

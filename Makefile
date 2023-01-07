@@ -7,11 +7,10 @@ INCLUDE = ./minishell.h libft/libft.h
 NAME = minishell
 
 OBJ = $(SRC:.c=.o)
-CC = cc
+CC = cc -g
 
-CFLAGS = -c -I. -I/goinfre/$(shell whoami)/homebrew/opt/readline/include -Wall -Wextra -Werror
-LFALGS = -L/goinfre/$(shell whoami)/homebrew/opt/readline/lib -lreadline
-
+CFLAGS = -c -I. -I/goinfre/$(shell whoami)/.brew/opt/readline/include -Wall -Wextra -Werror
+LFALGS = -L/goinfre/$(shell whoami)/.brew/opt/readline/lib -lreadline
 %.o : %.c $(INCLUDE)
 	$(CC) -O2 -g $(CFLAGS) $<
 
