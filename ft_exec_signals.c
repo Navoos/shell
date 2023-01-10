@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 16:16:34 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/10 11:30:21 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 17:45:54 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ void	ft_exec_sigint(int sig)
 	if (sig == SIGINT)
 	{
 		write(1, "", 1);
-		ft_exec_prompt();
-	}
-}
-
-void	ft_exec_sigquit(int sig)
-{
-	if (sig == SIGQUIT)
-	{
-		write(1, "Quit: 3", 7);
 		ft_exec_prompt();
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 19:09:08 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/10 11:15:30 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 17:48:04 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_print_error(char *cmd, char *arg)
 	if (errno == 2)
 	{
 		g_minishell.exit_status = 127;
-		if (ft_strchr(cmd, '/'))
+		if (ft_strchr(cmd, '/') || !ft_strcmp(cmd, "cd"))
 			ft_putstr_fd("No such file or directory\n", 2);
 		else
 			ft_putstr_fd("command not found\n", 2);
@@ -42,27 +42,26 @@ void	ft_print_error(char *cmd, char *arg)
 
 void	ft_exec_cmd(t_shell *shell, char *_cmd, char **arglv, char **envp)
 {
-	int		status;
 	char	*path;
+	int		status;
 
 	path = NULL;
 	g_minishell.print_prompt = 0;
-	signal(SIGQUIT, ft_exec_sigquit);
 	if (fork() == 0)
 	{
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		execve(get_path(shell->env_head, _cmd), arglv, envp);
 		ft_putstr_fd("bigshell: ", 2);
 		perror(_cmd);
-		if (errno == 2)
-			exit(127);
-		else
-			exit(126);
+		exit(126 + (errno == 2));
 	}
 	wait(&status);
+	g_minishell.exit_status = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+		g_minishell.exit_status = WTERMSIG(status) + 128;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, ft_exec_sigint);
-	g_minishell.exit_status = WEXITSTATUS(status);
 }
 
 int	ft_get_argc(t_cmd *cmd)

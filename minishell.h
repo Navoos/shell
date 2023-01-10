@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:50:52 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/10 13:07:18 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:41:12 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void			ft_add_split_to_mem(char **split);
 int				ft_add_command_to_mem(char *cmd);
 void			ft_exec_sigquit(int sig);
 void			ft_exec_sigint(int sig);
-void			ft_remove_pwd(t_env *env_head);
+void			ft_remove_pwd(t_env **env_head);
 void			*ft_create_memory_node(void *ptr);
 void			ft_add_to_perm_memory(t_memory	**memory, t_memory *new);
 void			ft_add_to_tmp_memory(t_memory	**memory, t_memory *new);

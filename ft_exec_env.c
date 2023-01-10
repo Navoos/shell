@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 22:31:46 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/10 13:07:53 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:41:46 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	ft_unset(t_shell *shell, char **args)
 		if (ft_strcmp(args[i], "OLDPWD") == 0)
 			g_minishell.oldpwd = 0;
 		if (ft_strcmp(args[i], "PWD") == 0)
-			ft_remove_pwd(shell->env_head);
+			ft_remove_pwd(&shell->env_head);
 		else if (!args[i][0] || !ft_is_valid_env(args[i]))
 			ft_print_env_error(args[0], args[i]);
 		else
