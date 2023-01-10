@@ -6,28 +6,28 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 15:38:27 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 21:36:15 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/08 18:28:56 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
+// void	ft_putchar_fd(char c, int fd)
+// {
+// 	write(fd, &c, 1);
+// }
 
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
+// void	ft_putstr_fd(char *s, int fd)
+// {
+// 	int	i;
 
-	i = 0;
-	while (s[i])
-	{
-		ft_putchar_fd(s[i], fd);
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (s[i])
+// 	{
+// 		ft_putchar_fd(s[i], fd);
+// 		i++;
+// 	}
+// }
 
 int	skip_n(int argc, char **args)
 {
@@ -71,5 +71,6 @@ int	ft_echo(int argc, char **argv)
 	}
 	if (!n)
 		ft_putchar_fd('\n', 1);
+	g_minishell.exit_status = 0;
 	return (0);
 }

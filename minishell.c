@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:51:08 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/07 20:24:45 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/10 12:55:17 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	ft_run_shell(t_shell *shell)
 		ft_exec_signals();
 		cmd = readline("bigshell$ ");
 		add_history(cmd);
-		if (!cmd)
-			break ;
+		if (ft_add_command_to_mem(cmd) == -1)
+			ft_exit(NULL);
 		ft_tokenize_cmd(&parser.tokens, cmd, shell->env_head);
 		if (g_minishell.error_flag)
 		{
@@ -76,6 +76,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)av;
 	shell = malloc(sizeof(t_shell));
+	g_minishell.exit_status = 0;
 	env = NULL;
 	ft_init_shell(shell, env, envp);
 	if (ac != 1)
@@ -90,12 +91,13 @@ int	main(int ac, char **av, char **envp)
 
 void	__print_tree(t_parser *parser, int io[2],
 						t_tokens **token, t_shell *shell)
-{
+{	
+	g_minishell.is_child = 1;
 	ft_exec_main(parser->tree, shell);
+	g_minishell.is_child = 0;
 	ft_drop_tmp_memory();
 	if (token)
 		*token = 0x0;
-	g_minishell.error_flag = 0;
 	dup2(io[0], STDIN_FILENO);
 	dup2(io[1], STDOUT_FILENO);
 }

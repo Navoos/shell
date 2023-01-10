@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 14:55:30 by yakhoudr          #+#    #+#             */
-/*   Updated: 2022/09/25 21:47:30 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/08 18:47:22 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,4 @@ void	ft_putstr_fd(char *s, int fd)
 	if (!s)
 		return ;
 	write(fd, s, ft_strlen(s));
-	write(fd, "\n", 1);
 }

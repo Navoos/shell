@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/07 16:16:34 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/07 18:49:16 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 11:30:21 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_exec_prompt(void)
 {
 	write(1, "\n", 1);
-	if (g_minishell.print_prompt)
+	if (g_minishell.print_prompt && !g_minishell.is_child)
 	{
 		rl_on_new_line();
 		rl_replace_line("", 0);
@@ -33,8 +33,18 @@ void	ft_exec_sigint(int sig)
 	}
 }
 
+void	ft_exec_sigquit(int sig)
+{
+	if (sig == SIGQUIT)
+	{
+		write(1, "Quit: 3", 7);
+		ft_exec_prompt();
+	}
+}
+
 void	ft_exec_signals(void)
 {
+	g_minishell.print_prompt = 1;
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, ft_exec_sigint);
 }

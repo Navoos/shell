@@ -3,37 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   __utils2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yakhoudr <yakhoudr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 21:29:13 by machlouj          #+#    #+#             */
-/*   Updated: 2023/01/07 20:38:45 by yakhoudr         ###   ########.fr       */
+/*   Updated: 2023/01/09 22:08:09 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_tree	*ft_construct_enode(void)
-{
-	t_exec_node	*enode;
-
-	enode = ft_xalloc(sizeof(t_exec_node));
-	enode->type = ENODE;
-	enode->cmd = NULL;
-	ft_collect_tmp_mem(enode);
-	return ((t_tree *) enode);
-}
-
-t_tree	*ft_construct_pnode(t_tree *left, t_tree *right)
-{
-	t_pipe_node	*pnode;
-
-	pnode = ft_xalloc(sizeof(t_pipe_node));
-	ft_collect_tmp_mem(pnode);
-	pnode->type = PNODE;
-	pnode->left = left;
-	pnode->right = right;
-	return ((t_tree *) pnode);
-}
 
 void	join_args(t_cmd **head, t_cmd *new)
 {
@@ -63,7 +40,8 @@ t_cmd	*create_arg(char *value)
 	if (!ans)
 		exit(1);
 	ans->val = ft_strdup(value);
-	ft_add_to_tmp_memory(&g_minishell.tmp_memory, ft_create_memory_node(ans->val));
+	ft_add_to_tmp_memory(&g_minishell.tmp_memory,
+		ft_create_memory_node(ans->val));
 	ans->next = NULL;
 	return (ans);
 }
@@ -79,7 +57,8 @@ t_tree	*ft_parse_exec(t_parser *parser)
 	parser->tree = ft_parse_redir(parser);
 	while (parser->current && parser->current->type == WORD_T)
 	{
-		join_args(&((t_exec_node *)tmp)->cmd, create_arg(parser->current->value));
+		join_args(&((t_exec_node *)tmp)->cmd,
+			create_arg(parser->current->value));
 		parser->current = parser->current->next;
 	}
 	parser->tree = ft_parse_redir(parser);

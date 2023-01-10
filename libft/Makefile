@@ -6,7 +6,7 @@
 #    By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/07 16:43:44 by yakhoudr          #+#    #+#              #
-#    Updated: 2023/01/06 20:44:41 by mzridi           ###   ########.fr        #
+#    Updated: 2023/01/09 16:22:43 by mzridi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 all: $(NAME)
 
 %.o : %.c libft.h
-	$(CC) -O2 -fsanitize=address $(CFLAGS) -c $< -o $@
+	$(CC) -O2 $(CFLAGS) -c $< -o $@
 
 clean:
 	$(RM) $(OBJS) $(OBJS_BONUS)

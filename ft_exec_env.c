@@ -6,11 +6,80 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 22:31:46 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/02 20:05:15 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:07:53 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_env_len(t_env *env_head)
+{
+	int	i;
+
+	i = 0;
+	while (env_head)
+	{
+		i++;
+		env_head = env_head->next;
+	}
+	return (i);
+}
+
+void	ft_concat_key_value(t_env *env_head, char **env)
+{
+	char	*tmp;
+	char	*tmp2;
+	int		i;
+
+	i = 0;
+	while (env_head)
+	{
+		tmp = ft_strjoin("declare -x ", env_head->key);
+		if (env_head->value)
+		{
+			tmp2 = ft_strjoin(tmp, "=");
+			free(tmp);
+			tmp = ft_strjoin(tmp2, "\"");
+			free(tmp2);
+			tmp2 = ft_strjoin(tmp, env_head->value);
+			free(tmp);
+			tmp = ft_strjoin(tmp2, "\"");
+			free(tmp2);
+		}
+		tmp2 = ft_strjoin(tmp, "\n");
+		free(tmp);
+		env[i++] = tmp2;
+		env_head = env_head->next;
+	}
+}
+
+char	**ft_copy_sorted_env(t_env *env_head)
+{
+	char	**env;
+	int		i;
+	int		j;
+	char	*tmp;
+
+	i = 0;
+	env = (char **)ft_xalloc(sizeof(char *) * (ft_env_len(env_head) + 1));
+	ft_concat_key_value(env_head, env);
+	env[ft_env_len(env_head)] = NULL;
+	i = -1;
+	while (env[++i])
+	{
+		j = i ;
+		while (env[++j])
+		{
+			if (ft_strcmp(env[i], env[j]) > 0)
+			{
+				tmp = env[i];
+				env[i] = env[j];
+				env[j] = tmp;
+			}
+		}
+	}
+	return (env);
+}
 
 int	ft_is_valid_env(char *str)
 {
@@ -29,103 +98,27 @@ int	ft_is_valid_env(char *str)
 	return (1);
 }
 
-char	**ft_split_f_occ(char *str, char c, t_env *env_head)
-{
-	int		i;
-	char	**split;
-
-	i = -1;
-	split = malloc(sizeof(char *) * 3);
-	split[2] = NULL;
-	while (str[++i])
-	{
-		if (str[i] == c)
-		{
-			if (i > 1 && str[i - 1] == '+')
-			{
-				split[0] = ft_substr(str, 0, i - 1);
-				split[1] = ft_strjoin(ft_get_env(env_head, split[0]), \
-							ft_substr(str, i + 1, ft_strlen(str) - i));
-				return (split);
-			}
-			split[0] = ft_substr(str, 0, i);
-			split[1] = ft_substr(str, i + 1, ft_strlen(str) - i);
-			return (split);
-		}
-	}
-	split[0] = ft_substr(str, 0, i);
-	split[1] = NULL;
-	return (split);
-}
-
-void	ft_export_key_value(t_shell *shell, char **split, char **args, int i)
-{
-	if (!split[0][0])
-	{
-		ft_putstr_fd("bigshell: export: `", 2);
-		ft_putstr_fd(args[i], 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-	}
-	else if (!ft_is_valid_env(split[0]))
-	{
-		ft_putstr_fd("bigshell: export: `", 2);
-		ft_putstr_fd(split[0], 2);
-		ft_putstr_fd("=", 2);
-		if (split[1])
-		{
-			ft_putstr_fd(split[1], 2);
-		}
-		ft_putstr_fd("': not a valid identifier\n", 2);
-	}
-	else if (split[1])
-		ft_add_env(&shell->env_head, split[0], split[1]);
-	else if (args[i][ft_strlen(args[i]) - 1] == '=')
-		ft_add_env(&shell->env_head, split[0], "");
-	else
-		ft_add_env(&shell->env_head, split[0], NULL);
-}
-
-void	ft_export(t_shell *shell, char **args)
-{
-	int		i;
-	char	**split;
-
-	i = 1;
-	if (!args[1])
-	{
-		ft_print_export(shell->env_head);
-		return ;
-	}
-	while (args[i])
-	{
-		split = ft_split_f_occ(args[i], '=', shell->env_head);
-		ft_export_key_value(shell, split, args, i);
-		i++;
-	}
-}
-
 void	ft_unset(t_shell *shell, char **args)
 {
 	int		i;
 
 	i = 1;
+	g_minishell.exit_status = 0;
 	if (!args[1])
 		return ;
 	if (!args[i][0])
 	{
-		ft_putstr_fd("bigshell: unset: `", 2);
-		ft_putstr_fd(args[i], 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
+		ft_print_env_error(args[0], args[i]);
 		return ;
 	}
 	while (args[i])
 	{
-		if (!args[i][0] || !ft_is_valid_env(args[i]))
-		{
-			ft_putstr_fd("bigshell: unset: `", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-		}
+		if (ft_strcmp(args[i], "OLDPWD") == 0)
+			g_minishell.oldpwd = 0;
+		if (ft_strcmp(args[i], "PWD") == 0)
+			ft_remove_pwd(shell->env_head);
+		else if (!args[i][0] || !ft_is_valid_env(args[i]))
+			ft_print_env_error(args[0], args[i]);
 		else
 			ft_delete_env(&shell->env_head, args[i]);
 		i++;

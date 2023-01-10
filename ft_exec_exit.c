@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/02 20:09:29 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 21:31:44 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/09 16:07:21 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ int	ft_isnumber(char *str)
 
 void	ft_exit(char **args)
 {
-	if (args[1] == NULL)
+	if (args[1] == NULL || !args)
 	{
 		ft_putstr_fd("exit\n", 1);
 		exit(g_minishell.exit_status);
 	}
-	else if (!ft_isnumber(args[1]))
+	else if (!ft_isnumber(args[1]) || strlen(args[1]) > 19 || (strlen(args[1])
+			== 19 && ft_strcmp(args[1], "9223372036854775807") > 0))
 	{
 		ft_putstr_fd("exit\n", 1);
 		ft_putstr_fd("bigshell: exit: ", 2);
@@ -55,4 +56,3 @@ void	ft_exit(char **args)
 		exit(ft_atoi(args[1]));
 	}
 }
-	

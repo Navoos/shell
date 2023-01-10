@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 11:54:03 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/07 19:09:52 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 12:55:47 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,30 @@
 char	*get_path(t_env *env_head, char *cmd)
 {
 	char	**env_path;
+	char	*tmp;
 
-	if (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/')
-		|| (cmd[0] == '.' && cmd[1] == '.' && cmd[2] == '/'))
+	if (cmd && (cmd[0] == '/' || (cmd[0] == '.' && cmd[1] == '/')
+			|| (cmd[0] == '.' && cmd[1] == '.' && cmd[2] == '/')))
 	{
-		if (access(cmd, F_OK) == 0)
+		if (access(cmd, F_OK || X_OK) == 0)
 			return (cmd);
-		return (0);
+		return (NULL);
 	}
 	env_path = ft_split(ft_get_env(env_head, "PATH"), ':');
-	while (*env_path)
+	ft_add_split_to_mem(env_path);
+	while (env_path && *env_path)
 	{
-		if (access(ft_strjoin(*env_path, ft_strjoin("/", cmd)), \
-				F_OK) == 0)
-			return (ft_strjoin(*env_path, ft_strjoin("/", cmd)));
+		tmp = ft_strjoin("/", cmd);
+		ft_add_to_tmp_memory(&g_minishell.tmp_memory,
+			ft_create_memory_node(tmp));
+		tmp = ft_strjoin(*env_path, tmp);
+		ft_add_to_tmp_memory(&g_minishell.tmp_memory,
+			ft_create_memory_node(tmp));
+		if (access(tmp, F_OK) == 0)
+			return (tmp);
 		env_path++;
 	}
-	return (0);
+	return (NULL);
 }
 
 int	is_built_in(char *cmd)
@@ -71,30 +78,32 @@ void	exec_built_in(int argc, char **argv, t_shell *shell)
 		ft_exit(argv);
 }
 
-void	exec_line(t_cmd *cmd, t_shell *shell)
+int	exec_line(t_cmd *cmd, t_shell *shell)
 {
 	char	*_cmd;
 	char	**envp;
 	char	**arglv;
 	int		arglc;
 
+	ft_add_to_tmp_memory(&g_minishell.tmp_memory, ft_create_memory_node(cmd));
 	arglc = ft_get_argc(cmd);
 	arglv = ft_get_args(cmd);
-	envp = ft_env_to_tab(shell->env_head);
+	if (!arglv)
+		return (0);
 	if (arglv && is_built_in(arglv[0]))
 		exec_built_in(arglc, arglv, shell);
 	else
 	{
+		envp = ft_env_to_tab(shell->env_head);
 		_cmd = arglv[0];
 		if (get_path(shell->env_head, _cmd))
 			ft_exec_cmd(shell, _cmd, arglv, envp);
 		else
-		{
-			ft_putstr_fd("bigshell: command not found\n", 2);
-			g_minishell.exit_status = 127;
-		}
+			ft_print_error(_cmd, NULL);
+		ft_free_args(envp);
 	}
 	free(arglv);
+	return (0);
 }
 
 int	ft_exec_main(t_tree *tree, t_shell *shell)
@@ -107,7 +116,7 @@ int	ft_exec_main(t_tree *tree, t_shell *shell)
 	{
 		cnode = (t_exec_node *)tree;
 		if (cnode->cmd)
-			exec_line(cnode->cmd, shell);
+			return (exec_line(cnode->cmd, shell));
 	}
 	else if (tree->type == PNODE)
 	{

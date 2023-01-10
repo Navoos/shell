@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 23:27:22 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/04 21:29:43 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:06:57 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,59 +44,14 @@ void	ft_print_env(t_env *env_head)
 	}
 }
 
-t_env	*ft_sort_by_key(t_env *env_head)
+void	ft_print_env_error(char *cmd, char *arg)
 {
-	t_env	*tmp;
-	t_env	*tmp2;
-	char	*tmp_key;
-	char	*tmp_value;
-
-	tmp = env_head;
-	while (tmp)
-	{
-		tmp2 = tmp->next;
-		while (tmp2)
-		{
-			if (ft_strcmp(tmp->key, tmp2->key) > 0)
-			{
-				tmp_key = tmp->key;
-				tmp_value = tmp->value;
-				tmp->key = tmp2->key;
-				tmp->value = tmp2->value;
-				tmp2->key = tmp_key;
-				tmp2->value = tmp_value;
-			}
-			tmp2 = tmp2->next;
-		}
-		tmp = tmp->next;
-	}
-	return (env_head);
-}
-
-void	ft_print_export(t_env *env_head)
-{
-	t_env	*tmp;
-
-	tmp = ft_sort_by_key(env_head);
-	while (tmp)
-	{
-		if (tmp->value)
-		{
-			ft_putstr_fd("declare -x ", 1);
-			ft_putstr_fd(tmp->key, 1);
-			ft_putstr_fd("=\"", 1);
-			ft_putstr_fd(tmp->value, 1);
-			ft_putstr_fd("\"\n", 1);
-		}
-		else
-		{
-			ft_putstr_fd("declare -x ", 1);
-			ft_putstr_fd(tmp->key, 1);
-			ft_putstr_fd("\n", 1);
-		}
-		tmp = tmp->next;
-	}
-	free(tmp);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putstr_fd(": `", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
+	g_minishell.exit_status = 1;
 }
 
 char	**ft_env_to_tab(t_env *env_head)
@@ -104,6 +59,7 @@ char	**ft_env_to_tab(t_env *env_head)
 	t_env	*tmp;
 	char	**envp;
 	int		i;
+	char	*tmp_key;
 
 	tmp = env_head;
 	i = 0;
@@ -112,16 +68,34 @@ char	**ft_env_to_tab(t_env *env_head)
 		i++;
 		tmp = tmp->next;
 	}
-	envp = malloc(sizeof(char *) * (i + 1));
+	envp = ft_xalloc(sizeof(char *) * (i + 1));
 	i = 0;
 	tmp = env_head;
 	while (tmp)
 	{
-		envp[i] = ft_strjoin(tmp->key, "=");
-		envp[i] = ft_strjoin(envp[i], tmp->value);
+		tmp_key = ft_strjoin(tmp->key, "=");
+		envp[i] = ft_strjoin(tmp_key, tmp->value);
+		free(tmp_key);
 		i++;
 		tmp = tmp->next;
 	}
 	envp[i] = NULL;
 	return (envp);
+}
+
+void	ft_remove_pwd(t_env *env_head)
+{
+	t_env	*tmp;
+
+	tmp = env_head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "PWD") == 0)
+		{
+			if (tmp->value)
+				free(tmp->value);
+			tmp->value = NULL;
+		}
+		tmp = tmp->next;
+	}
 }

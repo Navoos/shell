@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:50:52 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/07 19:18:19 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:07:18 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ typedef struct s_minishell
 	int			exit_status;
 	t_memory	*tmp_memory;
 	t_memory	*perm_memory;
-	int			print_prompt;	
+	int			print_prompt;
+	int			is_child;
+	int			oldpwd;
 }	t_minishell;
 
 typedef struct s_tokens
@@ -167,9 +169,21 @@ void			ft_exec_signals(void);
 void			ft_exec_cmd(t_shell *shell, char *_cmd, char **arglv,
 					char **envp);
 char			*get_path(t_env *env_head, char *cmd);
+void			ft_print_error(char *cmd, char *arg);
+void			ft_free_args(char **args);
+void			ft_export(t_shell *shell, char **args);
+int				ft_is_valid_env(char *str);
+char			**ft_copy_sorted_env(t_env *env_head);
+void			ft_print_env_error(char *cmd, char *arg);
+void			ft_add_split_to_mem(char **split);
+int				ft_add_command_to_mem(char *cmd);
+void			ft_exec_sigquit(int sig);
+void			ft_exec_sigint(int sig);
+void			ft_remove_pwd(t_env *env_head);
 void			*ft_create_memory_node(void *ptr);
 void			ft_add_to_perm_memory(t_memory	**memory, t_memory *new);
 void			ft_add_to_tmp_memory(t_memory	**memory, t_memory *new);
+t_env			*ft_sort_by_key(t_env *env_head);
 void			*ft_create_memory_node(void *ptr);
 void			ft_print_tokens(t_tokens *list);
 unsigned int	ft_add_dquote(char *s, t_tokens **token);

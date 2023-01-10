@@ -6,13 +6,13 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 23:30:02 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/06 20:27:41 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 13:10:24 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_add_pwd(t_shell *shell ,char *val)
+void	ft_add_pwd(t_shell *shell, char *val)
 {
 	if (val)
 	{
@@ -20,6 +20,9 @@ void	ft_add_pwd(t_shell *shell ,char *val)
 			free(shell->cwd);
 		shell->cwd = ft_strdup(val);
 		ft_add_env(&shell->env_head, "PWD", val);
+		free(val);
+		ft_add_to_perm_memory(&g_minishell.perm_memory,
+			ft_create_memory_node(shell->cwd));
 	}
 }
 
@@ -34,13 +37,12 @@ void	ft_go_back(t_shell *shell)
 	{
 		if (chdir(oldpwd) == -1)
 		{
-			ft_putstr_fd("bigshell: cd: ", 2);
-			ft_putstr_fd(oldpwd, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			ft_print_error("cd", oldpwd);
+			g_minishell.exit_status = 1;
 		}
 		else
 		{
-			if (ft_key_exist(shell->env_head, "OLDPWD"))
+			if (g_minishell.oldpwd++ >= 1)
 				ft_add_env(&shell->env_head, "OLDPWD", tmp_oldpwd);
 			ft_add_pwd(shell, getcwd(NULL, 0));
 			ft_pwd(shell);
@@ -63,11 +65,10 @@ void	ft_go_home(t_shell *shell)
 	{
 		if (chdir(home) == -1)
 		{
-			ft_putstr_fd("bigshell: cd: ", 2);
-			ft_putstr_fd(home, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
+			ft_print_error("cd", home);
+			g_minishell.exit_status = 1;
 		}
-		else if (ft_key_exist(shell->env_head, "OLDPWD"))
+		else if (g_minishell.oldpwd++ >= 1)
 		{
 			ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
 			ft_add_pwd(shell, getcwd(NULL, 0));
@@ -77,6 +78,8 @@ void	ft_go_home(t_shell *shell)
 	}
 	else
 		ft_putstr_fd("bigshell: cd: HOME not set\n", 2);
+	if (oldpwd)
+		free(oldpwd);
 }
 
 void	ft_go_point(t_shell *shell)
@@ -87,8 +90,8 @@ void	ft_go_point(t_shell *shell)
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
 	{
-		printf("bigshell: cd: error retrieving current directory:\
- getcwd: cannot access parent directories: No such file or directory\n");
+		ft_putstr_fd("bigshell: cd: error retrieving current directory:\
+ getcwd: cannot access parent directories: No such file or directory\n", 2);
 		oldpwd = shell->cwd;
 		tmp = shell->cwd;
 		if (oldpwd)
@@ -96,14 +99,22 @@ void	ft_go_point(t_shell *shell)
 		if (tmp)
 			free(tmp);
 	}
-	else if (ft_key_exist(shell->env_head, "OLDPWD"))
+	else if (g_minishell.oldpwd++ >= 1)
+	{
 		ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
+		ft_add_pwd(shell, getcwd(NULL, 0));
+	}
+	else
+		ft_add_pwd(shell, getcwd(NULL, 0));
+	if (oldpwd)
+		free(oldpwd);
 }
 
 void	ft_cd(t_shell *shell, char **args)
 {
 	char	*oldpwd;
 
+	g_minishell.exit_status = 0;
 	if (!args[1] || ft_strcmp(args[1], "~") == 0)
 		ft_go_home(shell);
 	else if (ft_strcmp(args[1], "-") == 0)
@@ -114,13 +125,15 @@ void	ft_cd(t_shell *shell, char **args)
 	{
 		oldpwd = getcwd(NULL, 0);
 		if (chdir(args[1]) == -1)
-			printf("bigshell: cd: %s: No such file or directory\n", args[1]);
-		else if (ft_key_exist(shell->env_head, "OLDPWD"))
+			ft_print_error("cd", args[1]);
+		else if (g_minishell.oldpwd++ >= 1)
 		{
 			ft_add_env(&shell->env_head, "OLDPWD", oldpwd);
 			ft_add_pwd(shell, getcwd(NULL, 0));
 		}
 		else
 			ft_add_pwd(shell, getcwd(NULL, 0));
+		if (oldpwd)
+			free(oldpwd);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 18:39:12 by mzridi            #+#    #+#             */
-/*   Updated: 2022/12/31 23:27:54 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 12:17:16 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,28 @@ int	ft_update_env(t_env **env_head, char *key, char *value)
 			if (!value)
 				return (1);
 			free(tmp->value);
-			tmp->value = value;
+			tmp->value = ft_strdup(value);
+			ft_add_to_perm_memory(&g_minishell.perm_memory,
+				ft_create_memory_node(tmp->value));
 			return (1);
 		}
 		tmp = tmp->next;
 	}
 	return (0);
+}
+
+void	ft_create_env_head(t_env **env_head, char *key, char *value)
+{
+	*env_head = ft_xalloc(sizeof(t_env));
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node(*env_head));
+	(*env_head)->key = ft_strdup(key);
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node((*env_head)->key));
+	(*env_head)->value = ft_strdup(value);
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node((*env_head)->value));
+	(*env_head)->next = NULL;
 }
 
 void	ft_add_env(t_env **env_head, char *key, char *value)
@@ -40,19 +56,22 @@ void	ft_add_env(t_env **env_head, char *key, char *value)
 	tmp = *env_head;
 	if (!*env_head)
 	{
-		*env_head = malloc(sizeof(t_env));
-		(*env_head)->key = key;
-		(*env_head)->value = value;
-		(*env_head)->next = NULL;
+		ft_create_env_head(env_head, key, value);
 		return ;
 	}
 	if (ft_update_env(env_head, key, value))
 		return ;
 	while (tmp->next)
 		tmp = tmp->next;
-	new = malloc(sizeof(t_env));
-	new->key = key;
-	new->value = value;
+	new = ft_xalloc(sizeof(t_env));
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node(new));
+	new->key = ft_strdup(key);
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node(new->key));
+	new->value = ft_strdup(value);
+	ft_add_to_perm_memory(&g_minishell.perm_memory,
+		ft_create_memory_node(new->value));
 	new->next = NULL;
 	tmp->next = new;
 }
@@ -71,6 +90,9 @@ void	ft_delete_env(t_env **env_head, char *key)
 		if (ft_strcmp(tmp->key, key) == 0)
 		{
 			prev->next = tmp->next;
+			free(tmp->key);
+			if (tmp->value)
+				free(tmp->value);
 			free(tmp);
 			break ;
 		}
