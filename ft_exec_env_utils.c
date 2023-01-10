@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/31 23:27:22 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/10 13:41:17 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 17:57:42 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**ft_env_to_tab(t_env *env_head)
 	return (envp);
 }
 
-void	ft_remove_pwd(t_env **env_head)
+void	ft_remove_key(t_env **env_head, char *key)
 {
 	t_env	*tmp;
 	t_env	*prev;
@@ -92,7 +92,7 @@ void	ft_remove_pwd(t_env **env_head)
 	prev = NULL;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, "PWD") == 0)
+		if (ft_strcmp(tmp->key, key) == 0)
 		{
 			if (prev)
 				prev->next = tmp->next;

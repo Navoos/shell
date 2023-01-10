@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/25 20:51:08 by yakhoudr          #+#    #+#             */
-/*   Updated: 2023/01/10 12:55:17 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 19:20:12 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ void	__print_tree(t_parser *parser, int io[2],
 {	
 	g_minishell.is_child = 1;
 	ft_exec_main(parser->tree, shell);
+	if (g_minishell.exit_status == 131)
+		ft_putstr_fd("Quit: 3\n", 2);
 	g_minishell.is_child = 0;
 	ft_drop_tmp_memory();
 	if (token)

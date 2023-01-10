@@ -6,7 +6,7 @@
 /*   By: mzridi <mzridi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 23:30:02 by mzridi            #+#    #+#             */
-/*   Updated: 2023/01/10 13:10:24 by mzridi           ###   ########.fr       */
+/*   Updated: 2023/01/10 19:17:33 by mzridi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ void	ft_go_point(t_shell *shell)
 		tmp = shell->cwd;
 		if (oldpwd)
 			shell->cwd = ft_strjoin(oldpwd, "/.");
-		if (tmp)
-			free(tmp);
 	}
 	else if (g_minishell.oldpwd++ >= 1)
 	{
